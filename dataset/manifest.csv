@@ -1,0 +1,8 @@
+filename,prototype_document_type,required,description
+01_application_form.pdf,Application Form,true,Fictional application and institution profile
+02_institution_registration.pdf,Institution Registration,true,Fictional registration certificate summary
+03_land_lease_document.pdf,Land / Lease Document,true,Fictional land and lease summary with expiry date
+04_faculty_details.pdf,Faculty Details,true,Fictional faculty register
+05_infrastructure_details.pdf,Infrastructure Details,true,Fictional campus facilities statement
+06_undertaking.pdf,Undertaking,true,Fictional undertaking and declaration
+07_compliance_evidence.pdf,Compliance Evidence / EVC Note,false,Fictional EVC visit note and supporting evidence

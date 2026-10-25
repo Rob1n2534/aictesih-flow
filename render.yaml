@@ -1,0 +1,43 @@
+# Render Blueprint: creates the database, API and website in one go.
+databases:
+  - name: aictesih-db
+    plan: free
+    databaseName: aictesih
+    user: aictesih
+
+services:
+  # API (Node + Express)
+  - type: web
+    name: aictesih-api-6ixbyte
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aictesih-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENABLE_OCR
+        value: "false"
+      - key: ENABLE_EMAIL
+        value: "false"
+
+  # Website (React + Vite, static)
+  - type: web
+    name: aictesih-flow-6ixbyte
+    runtime: static
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        value: https://aictesih-api-6ixbyte.onrender.com/api

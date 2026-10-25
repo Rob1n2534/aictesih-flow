@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aictesih
+      POSTGRES_USER: aictesih
+      POSTGRES_PASSWORD: demo_password_change_me
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aictesih -d aictesih"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  server:
+    build: ./server
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://aictesih:demo_password_change_me@db:5432/aictesih
+      JWT_SECRET: local_demo_secret_change_before_deployment
+      CLIENT_ORIGIN: http://localhost:5173
+      UPLOAD_DIR: /app/uploads
+      ENABLE_OCR: "false"
+      ENABLE_EMAIL: "false"
+      SMTP_HOST: ""
+      SMTP_PORT: "587"
+      SMTP_USER: ""
+      SMTP_PASS: ""
+      EMAIL_FROM: "AICTE FLOW Demo <no-reply@example.test>"
+    ports:
+      - "4000:4000"
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:4000/api
+    depends_on:
+      - server
+volumes:
+  pgdata:
+  uploads:
